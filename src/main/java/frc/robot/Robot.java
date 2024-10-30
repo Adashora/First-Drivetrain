@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -35,11 +36,20 @@ public class Robot extends TimedRobot {
   //back left motor
   private CANSparkMax l_motor_2 = new CANSparkMax(3, MotorType.kBrushless);
 
+// pivot motor define
+  private CANSparkMax pivot_motor = new CANSparkMax(4, MotorType.kBrushless);
+
+
 
   //joysticks
-  private Joystick rJoystick = new Joystick(1);
-  private Joystick lJoystick = new Joystick(0);
 
+private Joystick r_Joystick = new Joystick(1);
+  private Joystick l_Joystick = new Joystick(0);
+
+//joystick buttons
+private JoystickButton pivot_up= new JoystickButton(r_Joystick, 2);
+private JoystickButton pivot_down= new JoystickButton(r_Joystick, 3);
+  
   
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -57,11 +67,16 @@ public class Robot extends TimedRobot {
   l_motor_1.setIdleMode(IdleMode.kBrake);
   l_motor_2.setIdleMode(IdleMode.kBrake);
  
+
+  pivot_motor.setIdleMode(IdleMode.kBrake);
 //invert motors
 //r_motor_1.setInverted(true);
 //r_motor_2.setInverted(true);
 //l_motor_1.setInverted(true);
 //l_motor_2.setInverted(true);
+
+//inverting  pivot motor
+//pivot_motor.setInverted(true);
 
 //back right motor follow front right motor
 r_motor_2.follow(l_motor_1);
@@ -123,8 +138,18 @@ r_motor_1.follow(l_motor_2);
   //l_motor_1.set(lJoystick.getY());
 
     //Arcade drive 
-  r_motor_1.set(-rJoystick.getX());  
-  l_motor_1.set(+rJoystick.getX());
+  r_motor_1.set(-r_Joystick.getX());  
+  l_motor_1.set(+r_Joystick.getX());
+
+  if (pivot_up.getAsBoolean()) {
+    pivot_motor.set(0.5);
+  }
+  else if (pivot_down.getAsBoolean()) {
+    pivot_motor.set(-0.5);
+  }
+  else {
+    pivot_motor.set(0);
+  }
 }
 
   /** This function is called once when the robot is disabled. */
